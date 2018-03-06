@@ -1,9 +1,13 @@
 package company;
 import java.util.Scanner;
 
-public class Main {
+public class LearningSoulsGame {
 
     public static void main(String[] args) {
+        createHeros();
+    }
+
+    private static void createHeros () {
         Scanner sc = new Scanner(System.in);
         System.out.println("Voulez-vous nommer votre héros ? y/n");
         String res = sc.nextLine();

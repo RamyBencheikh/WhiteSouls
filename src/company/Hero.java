@@ -74,10 +74,19 @@ public class Hero {
     }
 
     public String toString() {
-        return "[Hero]\t" + this.name + "[Stamina]\t" + this.stamina + "[Life]\t" + this.life;
+        if (isALive()) {
+            return "[Hero]\t" + this.name + "[Stamina]\t" + this.stamina + "[Life]\t" + this.life + "\t (alive)";
+        } else {
+            return "[Hero]\t" + this.name + "[Stamina]\t" + this.stamina + "[Life]\t" + this.life + "\t (dead)";
+        }
+
     }
 
     public void printStats() {
         System.out.println(toString());
+    }
+
+    public Boolean isALive() {
+        return this.life != 0;
     }
 }
