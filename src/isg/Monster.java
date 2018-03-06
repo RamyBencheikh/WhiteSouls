@@ -1,4 +1,4 @@
-package company;
+package isg;
 
 public class Monster {
 
@@ -47,9 +47,8 @@ public class Monster {
     }
 
     /**
-     * Define the hero name with the choose of the user
-     * Set 100 maxLife and 50 max Stamina
-     * @param name: Name of the hero
+     * Define the Monster name with the choose of the user
+     * @param name: Name of the Monster
      */
     public Monster(String name) {
         this();
@@ -57,8 +56,8 @@ public class Monster {
     }
 
     /**
-     * Define a default hero name when user not define it
-     * Set 100 maxLife and 50 max Stamina
+     * Define a default Monster name when user not define it
+     * Set 10 maxLife and 10 max Stamina
      */
     public Monster() {
         this.name = "YMonster_"+INSTANCES_COUNT;
