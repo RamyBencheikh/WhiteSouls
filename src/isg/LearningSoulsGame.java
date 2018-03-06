@@ -1,5 +1,8 @@
 package isg;
 
+import characters.Hero;
+import characters.Monster;
+
 import java.util.Scanner;
 
 public class LearningSoulsGame {

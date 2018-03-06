@@ -1,4 +1,4 @@
-package isg;
+package characters;
 
 public class Hero {
 
@@ -86,7 +86,7 @@ public class Hero {
         System.out.println(toString());
     }
 
-    Boolean isALive() {
+    public Boolean isALive() {
         return this.life != 0;
     }
 }

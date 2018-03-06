@@ -1,4 +1,4 @@
-package isg;
+package characters;
 
 public class Monster {
 
