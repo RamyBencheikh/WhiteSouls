@@ -3,10 +3,8 @@ package company;
 public class Monster {
 
     private String name;
-    private int life;
-    private int maxLife;
-    private int stamina;
-    private int maxStamina;
+    private int life, maxLife,stamina, maxStamina;
+    private static int INSTANCES_COUNT=0;
 
     public String getName() {
         return name;
@@ -54,11 +52,8 @@ public class Monster {
      * @param name: Name of the hero
      */
     public Monster(String name) {
+        this();
         this.name = name;
-        this.life = 10;
-        this.maxLife = 10;
-        this.stamina = 10;
-        this.maxStamina = 10;
     }
 
     /**
@@ -66,20 +61,16 @@ public class Monster {
      * Set 100 maxLife and 50 max Stamina
      */
     public Monster() {
-        this.name = "Ynovator";
+        this.name = "YMonster_"+INSTANCES_COUNT;
         this.life = 10;
         this.maxLife = 10;
         this.stamina = 10;
         this.maxStamina = 10;
+        INSTANCES_COUNT ++;
     }
 
     public String toString() {
-        if (isALive()) {
-            return "[Monster]\t" + this.name + "[Stamina]\t" + this.stamina + "[Life]\t" + this.life + "\t (alive)";
-        } else {
-            return "[Monster]\t" + this.name + "[Stamina]\t" + this.stamina + "[Life]\t" + this.life + "\t (dead)";
-        }
-
+        return "[Monster]\t" + this.name + "[Stamina]\t" + this.stamina + "[Life]\t" + this.life + (this.isALive()?"\t (ALIVE)":"\t (DEAD)");
     }
 
     public void printStats() {
@@ -87,6 +78,6 @@ public class Monster {
     }
 
     public Boolean isALive() {
-        return this.life != 0;
+        return this.getLife() > 0;
     }
 }

@@ -20,5 +20,9 @@ public class LearningSoulsGame {
             Hero hero = new Hero();
             hero.printStats();
         }
+        Monster monster = new Monster();
+        Monster monster2 = new Monster();
+        monster.printStats();
+        monster2.printStats();
     }
 }
