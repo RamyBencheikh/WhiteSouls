@@ -68,10 +68,17 @@ public class Monster {
         INSTANCES_COUNT ++;
     }
 
+    /**
+     * @return monster statistics
+     */
     public String toString() {
-        return "[Monster]\t" + this.name + "[Stamina]\t" + this.stamina + "[Life]\t" + this.life + (this.isALive()?"\t (ALIVE)":"\t (DEAD)");
+        return "[Monster]\t" + this.name + "\tStamina:\t" + this.stamina + "\tLife:\t" + this.life +
+                (this.isALive()?"\t (ALIVE)":"\t (DEAD)");
     }
 
+    /**
+     * Print monster statistics
+     */
     public void printStats() {
         System.out.println(toString());
     }

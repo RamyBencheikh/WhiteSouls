@@ -73,15 +73,17 @@ public class Hero {
         this.maxStamina = 50;
     }
 
+    /**
+     * @return hero statistics
+     */
     public String toString() {
-        if (isALive()) {
-            return "[Hero]\t" + this.name + "[Stamina]\t" + this.stamina + "[Life]\t" + this.life + "\t (alive)";
-        } else {
-            return "[Hero]\t" + this.name + "[Stamina]\t" + this.stamina + "[Life]\t" + this.life + "\t (dead)";
-        }
-
+        return "[Hero]\t" + this.name + "\tStamina:\t" + this.stamina + "\tLife:\t" + this.life +
+                (this.isALive()?"\t (ALIVE)":"\t (DEAD)");
     }
 
+    /**
+     * Print hero statistics
+     */
     public void printStats() {
         System.out.println(toString());
     }
