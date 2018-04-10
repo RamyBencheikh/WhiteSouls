@@ -1,7 +1,9 @@
-package isg;
+package lsg;
 
 import characters.Hero;
 import characters.Monster;
+import lsg.weapons.Sword;
+import lsg.weapons.Weapon;
 
 import java.util.Scanner;
 
@@ -37,10 +39,20 @@ public class LearningSoulsGame {
             String name = sc.nextLine();
             Hero hero = new Hero(name);
             hero.printStats();
-            System.out.println("L'heros:\t" + hero.getName() + "est" + ((hero.isALive()?"\t (ALIVE)":"\t (DEAD)")));
+            System.out.println("L'heros:\t" + hero.getName() + "est" + ((hero.isAlive()?"\t (ALIVE)":"\t (DEAD)")));
+            heroAttack(hero);
         } else {
             Hero hero = new Hero();
             hero.printStats();
+            heroAttack(hero);
+        }
+
+    }
+
+    private static void heroAttack(Hero hero) {
+        while (hero.getStamina() != 0) {
+            hero.printStats();
+            System.out.println("Degat:\t" + hero.attackWith(new Sword()));
         }
     }
 
