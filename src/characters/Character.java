@@ -3,6 +3,8 @@ package characters;
 import lsg.helpers.Dice;
 import lsg.weapons.Weapon;
 
+import java.util.Random;
+
 public class Character {
 
     protected String name;
@@ -111,8 +113,11 @@ public class Character {
             }
         }
 
-        int current = d1.roll(); // Précision
-        int damage = (weapon.getMaxDamage()-weapon.getMinDamage())*(current/100);
+        int accuracy = d1.roll(); // Précision
+        System.out.println("jet \t" + accuracy);
+        int damage = (int)(weapon.getMaxDamage()-weapon.getMinDamage())*(accuracy/100);
+
+        return (damage + weapon.getMinDamage());
 
     }
 
