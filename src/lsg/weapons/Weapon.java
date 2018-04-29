@@ -1,11 +1,19 @@
 package lsg.weapons;
+import consumables.repair.RepairKit;
+import lsg.bags.Collectible.Collectible;
 
-public class Weapon {
+public class Weapon implements Collectible{
     protected String name;
     protected Integer minDamage;
     protected Integer maxDamage;
     protected Integer stamCost;
     protected Integer durability;
+
+    public static final String DURABILITY_STAT_STRING = " Durability: ";
+    public static final String MAX_STAT_STRING = " STAT MAX: ";
+    public static final String MIN_STAT_STRING = " STAT MIN: ";
+    public static final String STAM_STAT_STRING = " STAM: ";
+
 
     public Weapon(String name, int minDamage, int maxDamage, int stamCost, int durability)
     {
@@ -42,7 +50,7 @@ public class Weapon {
 
     public void use()
     {
-        this.setDurability(durability - 1);
+        this.setDurability(this.getDurability() - 1); 
     }
 
 
@@ -54,6 +62,19 @@ public class Weapon {
 
     public String toString(){
 
-        return String.format(this.name + "( min: " + this.minDamage + " max: " + this.maxDamage + " stam: " + this.stamCost + " dur: " + this.durability + ")");
+        return String.format(this.name + "(" + MIN_STAT_STRING + minDamage + MAX_STAT_STRING + maxDamage + STAM_STAT_STRING + stamCost + DURABILITY_STAT_STRING + durability + ")");
+    }
+
+    public void repairDurability(int durability) {
+        this.setDurability(durability);
+    }
+
+    public void repairWeaponWith(RepairKit kit)
+    {
+        this.setDurability(this.getDurability() + kit.use());
+    }
+
+    public int getWeight() {
+        return 2;
     }
 }

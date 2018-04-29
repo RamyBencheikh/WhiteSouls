@@ -1,11 +1,19 @@
 package characters;
-
-import lsg.helpers.Dice;
+import lsg.bags.Collectible.Collectible;
+import lsg.bags.Collectible.SmallBag;
+import lsg.weapons.Sword;
 import lsg.weapons.Weapon;
+import lsg.helpers.Dice;
+import consumables.food.*;
+import consumables.drinks.*;
+import consumables.Consumable;
+import consumables.repair.*;
+import lsg.bags.Collectible.Bag;
 
-import java.util.Random;
+import java.lang.reflect.Array;
 
-public class Character {
+
+public abstract class Character {
 
     protected String name;
     protected Integer life;
@@ -14,6 +22,15 @@ public class Character {
     private String  alive;
     protected Integer maxStamina;
     protected static Integer INSTANCES_COUNT = 1;
+    protected Weapon weapon;
+    protected Consumable consumable;
+    private Bag bag = new SmallBag();
+
+    public static final String LIFE_STAT_STRING = "LIFE: ";
+    public static final String STAM_STAT_STRING = "STAMINA: ";
+    public static final String PROTEC_STAT_STRING = "PROTECTION: ";
+    public static final String BUFF_STAT_STRING = "BUFFS: ";
+
 
     Dice d1 = new Dice(101);
 
@@ -72,9 +89,16 @@ public class Character {
     {
         System.out.println(this.toString());
     }
+    
+    public Weapon getWeapon() {
+		return weapon;
+	}
 
+	public void setWeapon(Weapon weapon) {
+		this.weapon = weapon;
+	}
 
-    public Boolean isAlive()
+	public Boolean isAlive()
     {
         if(life == 0)
         {
@@ -95,36 +119,135 @@ public class Character {
         }
 
 
-        return String.format("%-20s%-20s%-20s%-20s", "[" +  this.getClass().getSimpleName() + "] " + name ,"LIFE " + life, "STAMINA " + stamina, "(" + alive + ")");
+        return String.format("%-20s%-20s%-20s%-20s%-20s%-20s", "[" +  this.getClass().getSimpleName() + "] " + name , LIFE_STAT_STRING + life, STAM_STAT_STRING + stamina, PROTEC_STAT_STRING + computeProtection(), BUFF_STAT_STRING + computeBuffValue(), "   (" + alive + ")");
     }
 
-    public int attackWith(Weapon weapon) {
-        int stam = getStamina();
+    private int attackWith(Weapon weapon) {
+    	int accuracy =  d1.roll();
+        int damage = (int)((weapon.getMaxDamage()-weapon.getMinDamage())*(accuracy/100.f));
+        
+        if (getStamina() == 0 || weapon.isBroken()) {
+        	return 0;
+        	}
+        else {
 
-        if (stam ==0) return 0;
-        if (weapon.isBroken()) return 0;
-
-        weapon.use();
-
-        if (stam > 0) {
-            setStamina(stam - weapon.getStamCost());
-            if (getStamina() < 0) {
-                setStamina(0);
-            }
+        	weapon.use();
+        
+	        if (this.getStamina() < weapon.getStamCost()) {
+	        	float ratioStamina;
+	           damage = damage+weapon.getMinDamage();
+	           ratioStamina = (float)this.getStamina()/weapon.getStamCost();
+	           damage = Math.round(damage*ratioStamina);
+	           this.setStamina(0);
+	        } else {
+	        	damage = damage + weapon.getMinDamage();
+	        	this.setStamina(this.getStamina()-weapon.getStamCost());
+	        }
         }
-
-        int accuracy = d1.roll(); // Précision
-        System.out.println("jet \t" + accuracy);
-        int damage = (int)(weapon.getMaxDamage()-weapon.getMinDamage())*(accuracy/100);
-
-        return (damage + weapon.getMinDamage());
-
+        
+        return (int) (damage + (damage*this.computeBuffValue())/100);
     }
-
+    
+    public int attack() {
+    	
+    	return (this.attackWith(weapon));
+    }
+    
+    public int getHitWith(int value) {
+    	if(this.computeProtection() >= 100) {
+    		return this.getLife();
+    	} else {
+    		System.out.println(value);
+    		System.out.println(Math.round(value*(1-(this.computeProtection()/100))));
+    		value = Math.round(value*(1-(this.computeProtection()/100)));
+    		this.life = (value < this.life) ? (this.life-value) : (0);
+        	return this.life;
+    	}
+    	
+    }
+    
     public static void main(String[] args) {
-        Character bla = new Character();
-        System.out.println(bla.d1.roll());
+       
 
     }
+    
+    public abstract float computeProtection();
 
+    public abstract float computeBuffValue();
+
+    private void drink(Drink drink)
+    {
+        System.out.println(this.getName() + " drinks " + drink.toString());
+        int sommeVie = this.getLife() + drink.use();
+        System.out.println("After use : " + drink.toString());
+        if (sommeVie > this.getMaxLife()) {
+            this.setLife(this.getMaxLife());
+        }
+        else {
+            this.setLife(sommeVie);
+        }
+    }
+
+    private void eat(Food food)
+    {
+        System.out.println(this.getName() + " eats " + food.toString());
+        int sommeVie = this.getLife() + food.use();
+        System.out.println("After use : " + food.toString());
+        System.out.println(this.getMaxLife());
+        if (sommeVie > this.getMaxLife()) {
+            this.setLife(this.getMaxLife());
+        }
+        else {
+            this.setLife(sommeVie);
+        }
+    }
+
+    public void use(Consumable consumable)
+    {
+        if(consumable instanceof Drink)
+        {
+            this.drink((Drink) consumable);
+        }else if (consumable instanceof Food){
+            this.eat((Food) consumable);
+        }else if(consumable instanceof RepairKit)
+        {
+            this.repairWeaponWith((RepairKit) consumable);
+        }
+    }
+
+    private void repairWeaponWith(RepairKit kit)
+    {
+        System.out.println(this.getName() + " repairs " + this.weapon.toString() + " with " + kit.toString());
+        int totalRepair = this.weapon.getDurability() + kit.use();
+        System.out.println("After use : " + kit.toString());
+        this.weapon.repairDurability(totalRepair);
+    }
+
+    public Consumable getConsumable() {
+        return consumable;
+    }
+
+    public void setConsumable(Consumable consumable) {
+        this.consumable = consumable;
+    }
+    public void consume()
+    {
+        this.use(this.getConsumable());
+    }
+
+    public void pickUp(Collectible item) {
+        bag.push(item);
+    }
+
+    public void printBag() {
+        bag.toString();
+    }
+
+    public int getBagCapacity() {
+        return bag.getWeight();
+    }
+
+    public void consumables() {
+        consumable.toString();
+    }
 }

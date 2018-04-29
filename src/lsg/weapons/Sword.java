@@ -1,7 +1,5 @@
 package lsg.weapons;
 
-import java.util.Random;
-
 
 public class Sword extends Weapon{
 
